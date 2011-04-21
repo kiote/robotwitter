@@ -10,7 +10,7 @@ Robotwitter makes it easer to robust some twitter functions, such as:
 
 * gem install robotwitter
 
-client = Robotwitter.new "#{path_to_config_yaml}", "your_twitter_login", &GETTER
+client = Robotwitter::Robot.new "#{path_to_config_yaml}", "your_twitter_login", &GETTER
 &GETTER could be nil (see below)
 
 client.follow_all_back

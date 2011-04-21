@@ -1,0 +1,5 @@
+test_login:
+  consumer_key: key
+  consumer_secret: secret
+  oauth_token: oauth_token
+  oauth_token_secret: oauth_token
