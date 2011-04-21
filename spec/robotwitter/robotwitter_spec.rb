@@ -11,16 +11,21 @@ describe "Robotwitter" do
       @client = Robotwitter::Robot.new "#{settings_path}/settings.yaml", 'test_login', &POSTER
     end
 
-    it "should creates new object on right init params" do
+    it "should create new object on right init params" do
       @client.class.to_s.should eq("Robotwitter::Robot")
     end
 
     it "should follows those who follows me" do
-
+      pending "get the mock for twitter" do
+        @client.follow_all_back
+          a_request(:get, "https://search.twitter.com/search.json").
+            with(:query => {:q => "twitter"}).
+            should have_been_made
+      end
     end
 
     it "should tweet a message" do
-
+       pending("get the mock for twitter")
     end
 
     it "should retweet about word" do
