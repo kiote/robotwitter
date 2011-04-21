@@ -64,10 +64,6 @@ module Robotwitter
       pp send
     end
 
-    def send_message_mention pattern
-
-    end
-
     def retweet_about word
       search = search_users_tweets_about(word, 2)
       init_db
