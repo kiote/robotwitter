@@ -25,15 +25,19 @@ module Robotwitter
 
       @stub = false
 
-      yml = YAML.load_file config_path
+      begin
+        yml = YAML.load_file config_path
 
-      Twitter.configure do |config|
-        config.consumer_key = yml[section]['consumer_key']
-        config.consumer_secret = yml[section]['consumer_secret']
-        config.oauth_token = yml[section]['oauth_token']
-        config.oauth_token_secret = yml[section]['oauth_token_secret']
+        Twitter.configure do |config|
+          config.consumer_key = yml[section]['consumer_key']
+          config.consumer_secret = yml[section]['consumer_secret']
+          config.oauth_token = yml[section]['oauth_token']
+          config.oauth_token_secret = yml[section]['oauth_token_secret']
+        end
+        @client = Twitter::Client.new
+      rescue
+        print 'error occurred: ' + $!
       end
-      @client = Twitter::Client.new
     end
 
     # follow who follows me
