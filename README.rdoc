@@ -1,16 +1,26 @@
-= robotwitter
+= Robotwitter
 
-Description goes here.
+Robotwitter makes it easer to robust some twitter functions, such as:
+ * creating tweets
+ * retweeting by keywords
+ * follow back who follows you
+ * unfollow who do not follows you
 
-== Contributing to robotwitter
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+== Usage
+
+* gem install robotwitter
+
+client = Robotwitter.new "#{path_to_config_yaml}", "your_twitter_login", &GETTER
+&GETTER could be nil (see below)
+
+client.follow_all_back
+
+== Config Example
+your_twitter_login:
+  consumer_key: key
+  consumer_secret: secret
+  oauth_token: oauth_token
+  oauth_token_secret: oauth_token
 
 == Copyright
 
