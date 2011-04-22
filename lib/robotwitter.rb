@@ -5,6 +5,10 @@ require 'pp'
 require 'yaml'
 require 'sqlite3'
 
+require "robotwitter/db"
+require "robotwitter/path"
+require "robotwitter/version"
+
 module Robotwitter
   class Robot
     attr_accessor :stub
@@ -18,7 +22,7 @@ module Robotwitter
     #    db = SQLite3::Database.new("database.db")
     #    db.get_first_row( "select * from table" )
     #  end
-    def initialize config_path, section, &getter
+    def initialize config_file, section, &getter
       @getter = getter
       @followers_ids = nil
       @following_ids = nil
@@ -26,7 +30,7 @@ module Robotwitter
       @stub = false
 
       begin
-        yml = YAML.load_file config_path
+        yml = YAML.load_file Robotwitter::Path.get_base + '/' + config_file
 
         Twitter.configure do |config|
           config.consumer_key = yml[section]['consumer_key']
@@ -115,7 +119,7 @@ module Robotwitter
     protected
 
     def init_db
-      @db = Db.new('tweets') if @db.nil?
+      @db = Robotwitter::Db.new('tweets') if @db.nil?
       @db
     end
 
@@ -150,7 +154,7 @@ module Robotwitter
       begin
         @client.retweet(result['id']) unless @stub
       rescue
-        puts 'error'
+        puts 'error: ' + $!
       end
     end
 

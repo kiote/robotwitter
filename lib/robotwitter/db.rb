@@ -22,8 +22,8 @@ SQL
     end
 
     def initialize(name)
-      create_db("#{Path.get_base}/#{name}") unless exists? "#{Path.get_base}/#{name}"
-      @db = SQLite3::Database.new "#{Path.get_base}/#{name}.db"
+      create_db("#{Robotwitter::Path.get_base}/#{name}") unless exists? "#{Robotwitter::Path.get_base}/#{name}"
+      @db = SQLite3::Database.new "#{Robotwitter::Path.get_base}/#{name}.db"
     end
 
     # already retweeted this post
