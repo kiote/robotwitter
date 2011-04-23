@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Krivich Ekaterina"]
-  s.date = %q{2011-04-21}
+  s.date = %q{2011-04-23}
   s.description = %q{automate twitter tasks, such as retweetting, following, unfollowing}
   s.email = %q{krivich.ekaterina@gmail.com}
   s.extra_rdoc_files = [
@@ -22,7 +22,16 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
-    "lib/robotwitter.rb"
+    "VERSION",
+    "example/settings.yaml",
+    "example/test.rb",
+    "lib/robotwitter.rb",
+    "lib/robotwitter/db.rb",
+    "lib/robotwitter/path.rb",
+    "lib/robotwitter/version.rb",
+    "robotwitter.gemspec",
+    "spec/robotwitter/robotwitter_spec.rb",
+    "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/kiote/robotwitter}
   s.licenses = ["MIT"]
