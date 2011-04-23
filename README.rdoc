@@ -24,6 +24,19 @@ your_twitter_login:
   oauth_token: oauth_token
   oauth_token_secret: oauth_token
 
+== GETTER
+You can use GETTER as a lambda-function to get new tweets from somewhere.
+ Actually it used to work with external http and sqlite database.
+ It should be a lambda function wich return string
+
+ If you do not need getter, just set GETTER to nil.
+
+=== Getter example
+GETTER = lambda do
+  return_string_got_it_from_somewhere
+end
+
+
 == Copyright
 
 Copyright (c) 2011 Krivich Ekaterina. See LICENSE.txt for
