@@ -1,6 +1,6 @@
 = Robotwitter
 
-Robotwitter makes it easer to robust some twitter functions, such as:
+Robotwitter makes it easer to automate some twitter functions, such as:
  * creating tweets
  * retweeting by keywords
  * follow back who follows you
@@ -10,7 +10,9 @@ Robotwitter makes it easer to robust some twitter functions, such as:
 
 * gem install robotwitter
 
-client = Robotwitter::Robot.new "#{path_to_config_yaml}", "your_twitter_login", &GETTER
+Robotwitter::Path.set_base your_path_to_cofing
+
+client = Robotwitter::Robot.new "settings.yaml", "your_twitter_login", &GETTER
 &GETTER could be nil (see below)
 
 client.follow_all_back
