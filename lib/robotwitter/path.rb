@@ -1,13 +1,7 @@
 module Robotwitter
   class Path
-  @@base = nil
-
-  def self.set_base base
-    @@base = base
+    class << self
+      attr_accessor :base
+    end
   end
-
-  def self.get_base
-    @@base
-  end
-end
 end

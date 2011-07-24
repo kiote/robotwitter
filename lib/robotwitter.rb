@@ -22,7 +22,7 @@ module Robotwitter
     #    db = SQLite3::Database.new("database.db")
     #    db.get_first_row( "select * from table" )
     #  end
-    def initialize config_file, section, &getter
+    def initialize section, &getter
       @getter = getter
       @followers_ids = nil
       @following_ids = nil
@@ -30,8 +30,7 @@ module Robotwitter
       @stub = false
 
       begin
-        yml = YAML.load_file Robotwitter::Path.get_base + '/' + config_file
-
+        yml = YAML.load_file(Robotwitter::Path.base + '/' + "settings.yml")
         Twitter.configure do |config|
           config.consumer_key = yml[section]['consumer_key']
           config.consumer_secret = yml[section]['consumer_secret']
@@ -39,8 +38,8 @@ module Robotwitter
           config.oauth_token_secret = yml[section]['oauth_token_secret']
         end
         @client = Twitter::Client.new
-      rescue
-        print 'error occurred: ' + $!
+      rescue Exception => exception
+        print %/error occurred:  #{exception.inspect}\n#{exception.backtrace.join("\n")}/
       end
     end
 

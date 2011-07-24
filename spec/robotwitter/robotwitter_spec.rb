@@ -8,7 +8,8 @@ describe "Robotwitter" do
 
     before(:each) do
       settings_path = File.expand_path('../../../example', __FILE__)
-      @client = Robotwitter::Robot.new "#{settings_path}/settings.yaml", 'test_login', &POSTER
+      Robotwitter::Path.base = settings_path
+      @client = Robotwitter::Robot.new 'test_login', &POSTER
     end
 
     it "should create new object on right init params" do
