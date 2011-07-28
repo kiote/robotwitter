@@ -4,14 +4,13 @@ coverage
 Gemfile.lock
 # rdoc generated
 rdoc
-
+tweelog.txt
 # yard generated
 doc
 .yardoc
 
 # bundler
 .bundle
-
 # jeweler generated
 pkg
 
