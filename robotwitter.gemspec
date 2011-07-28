@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Krivich Ekaterina"]
-  s.date = %q{2011-04-23}
+  s.date = %q{2011-07-28}
   s.description = %q{automate twitter tasks, such as retweetting, following, unfollowing}
   s.email = %q{krivich.ekaterina@gmail.com}
   s.extra_rdoc_files = [
@@ -23,11 +23,11 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "example/settings.yaml",
+    "example/settings.yml",
     "example/test.rb",
+    "example/tweets.db",
     "lib/robotwitter.rb",
     "lib/robotwitter/db.rb",
-    "lib/robotwitter/path.rb",
     "lib/robotwitter/version.rb",
     "robotwitter.gemspec",
     "spec/robotwitter/robotwitter_spec.rb",
@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/kiote/robotwitter}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{automate some twitter tasks}
   s.test_files = [
     "spec/robotwitter/robotwitter_spec.rb",
@@ -44,12 +44,12 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<twitter>, [">= 0"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
+      s.add_runtime_dependency(%q<webmock>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<twitter>, [">= 0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
+      s.add_dependency(%q<webmock>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
@@ -65,6 +66,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<twitter>, [">= 0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
+    s.add_dependency(%q<webmock>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
