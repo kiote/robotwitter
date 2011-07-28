@@ -1,17 +1,15 @@
-require "rubygems"
-require "twitter"
-require "open-uri"
-require 'pp'
+require 'rubygems'
+require 'twitter'
+require 'open-uri'
 require 'yaml'
 require 'sqlite3'
+require 'logger'
 
-require "robotwitter/db"
-require "robotwitter/version"
+require 'robotwitter/db'
+require 'robotwitter/version'
 
 module Robotwitter
   class Robot
-    @db = nil
-
     # getter should be a lambda - function
     # which returns string
     # example of getter
@@ -25,6 +23,8 @@ module Robotwitter
       @followers_ids = nil
       @following_ids = nil
 
+      @logger = Logger.new('tweelog.txt', 'weekly')
+
       begin
         yml = YAML.load_file(path + '/' + "settings.yml")
         Twitter.configure do |config|
@@ -35,7 +35,7 @@ module Robotwitter
         end
         @client = Twitter::Client.new
       rescue Exception => exception
-        print %/error occurred:  #{exception.inspect}\n#{exception.backtrace.join("\n")}/
+        @logger.error %/error occurred:  #{exception.inspect}\n#{exception.backtrace.join("\n")}/
       end
     end
 
@@ -45,13 +45,13 @@ module Robotwitter
       get_following_ids
 
       follow_them = @followers_ids - @following_ids
-      pp 'follows:'
+      @logger.info 'follows:'
       follow_them.each do |id|
         begin
           @client.follow id
         rescue
         end
-        pp id
+        @logger.info id
       end
     end
 
@@ -60,7 +60,7 @@ module Robotwitter
       phrase = get_phrase
       send = pattern.gsub('_msg_', phrase)
       @client.update send
-      pp send
+      @logger.info send
     end
 
     def retweet_about word
@@ -70,7 +70,7 @@ module Robotwitter
         next if @db.retweeted?(result)
         retweet result
         @db.save_retweet result
-        pp result['id']
+        @logger.info result['id']
       end
     end
 
@@ -80,17 +80,17 @@ module Robotwitter
 
       get_followers_ids
       get_following_ids
-      pp users
+      @logger.info users
       users.each do |user|
         id = user['from_user_id']
         name = user['from_user']
         begin
           if (not @followers_ids.include?(id)) and (not @following_ids.include?(id))
             @client.follow name
-            pp name
+            @logger.info name
           end
         rescue  Exception => msg
-          pp "Error #{msg}"
+          @logger.error "Error #{msg}"
         end
       end
     end
@@ -106,7 +106,7 @@ module Robotwitter
           @client.unfollow id
         rescue
         end
-        pp id
+        @logger.info id
       end
     end
 
@@ -148,12 +148,12 @@ module Robotwitter
       begin
         @client.retweet(result['id'])
       rescue
-        puts 'error: ' + $!
+        @logger.error 'error: ' + $!
       end
     end
 
     def rate_limit
-      puts @client.rate_limit_status.remaining_hits.to_s + " Twitter API request(s) remaining this hour"
+      @logger.error @client.rate_limit_status.remaining_hits.to_s + " Twitter API request(s) remaining this hour"
     end
   end
 end

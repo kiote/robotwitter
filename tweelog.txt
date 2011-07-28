@@ -1,0 +1,2 @@
+# Logfile created on 2011-07-28 18:45:05 +0400 by logger.rb/25413
+I, [2011-07-28T18:45:05.358113 #57181]  INFO -- : follows:
