@@ -1,4 +1,7 @@
-$:.unshift File.expand_path('../../lib', __FILE__)
-$:.unshift File.dirname(__FILE__)
+$:.unshift(File.dirname(__FILE__))
+$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
-require "robotwitter"
+require 'twitter'
+require 'rspec'
+require 'fakeweb'
+require 'robotwitter'

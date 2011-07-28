@@ -3,6 +3,7 @@ source "http://rubygems.org"
 # Example:
 gem "twitter"
 gem "sqlite3"
+gem "webmock"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

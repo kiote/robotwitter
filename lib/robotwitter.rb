@@ -6,12 +6,10 @@ require 'yaml'
 require 'sqlite3'
 
 require "robotwitter/db"
-require "robotwitter/path"
 require "robotwitter/version"
 
 module Robotwitter
   class Robot
-    attr_accessor :stub
     @db = nil
 
     # getter should be a lambda - function
@@ -22,15 +20,13 @@ module Robotwitter
     #    db = SQLite3::Database.new("database.db")
     #    db.get_first_row( "select * from table" )
     #  end
-    def initialize section, &getter
+    def initialize path, section, &getter
       @getter = getter
       @followers_ids = nil
       @following_ids = nil
 
-      @stub = false
-
       begin
-        yml = YAML.load_file(Robotwitter::Path.base + '/' + "settings.yml")
+        yml = YAML.load_file(path + '/' + "settings.yml")
         Twitter.configure do |config|
           config.consumer_key = yml[section]['consumer_key']
           config.consumer_secret = yml[section]['consumer_secret']
@@ -52,7 +48,7 @@ module Robotwitter
       pp 'follows:'
       follow_them.each do |id|
         begin
-          @client.follow id if not @stub
+          @client.follow id
         rescue
         end
         pp id
@@ -63,7 +59,7 @@ module Robotwitter
     def send_message pattern
       phrase = get_phrase
       send = pattern.gsub('_msg_', phrase)
-      @client.update send if not @stub
+      @client.update send
       pp send
     end
 
@@ -89,8 +85,7 @@ module Robotwitter
         id = user['from_user_id']
         name = user['from_user']
         begin
-          if (not @followers_ids.include?(id)) \
-            and (not @following_ids.include?(id) and not @stub)
+          if (not @followers_ids.include?(id)) and (not @following_ids.include?(id))
             @client.follow name
             pp name
           end
@@ -108,7 +103,7 @@ module Robotwitter
       unfollow_them = @following_ids - @followers_ids
       unfollow_them.each do |id|
         begin
-          @client.unfollow id if not @stub
+          @client.unfollow id
         rescue
         end
         pp id
@@ -151,7 +146,7 @@ module Robotwitter
     # result - hash от поиска
     def retweet(result)
       begin
-        @client.retweet(result['id']) unless @stub
+        @client.retweet(result['id'])
       rescue
         puts 'error: ' + $!
       end

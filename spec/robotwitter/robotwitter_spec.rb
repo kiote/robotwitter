@@ -2,14 +2,21 @@ require "spec_helper"
 
 describe "Robotwitter" do
 
+  before do
+    FakeWeb.register_uri(:get, %r|https://api\.twitter\.com/1/followers/ids\.json|,
+                         :body => %|{"ids": [1,2,3]}|)
+    # GET https://api.twitter.com/1/friends/ids.json
+    FakeWeb.register_uri(:get, %r|https://api\.twitter\.com/1/friends/ids\.json|,
+                         :body => %|{"ids": [1,2,3]}|)
+  end
+
   context "with nil POSTER" do
 
     POSTER = nil
 
     before(:each) do
       settings_path = File.expand_path('../../../example', __FILE__)
-      Robotwitter::Path.base = settings_path
-      @client = Robotwitter::Robot.new 'test_login', &POSTER
+      @client = Robotwitter::Robot.new settings_path, 'test_login', &POSTER
     end
 
     it "should create new object on right init params" do
@@ -17,30 +24,16 @@ describe "Robotwitter" do
     end
 
     it "should follows those who follows me" do
-      pending "get the mock for twitter" do
-        @client.follow_all_back
-          a_request(:get, "https://search.twitter.com/search.json").
-            with(:query => {:q => "twitter"}).
-            should have_been_made
-      end
+      @client.follow_all_back
     end
 
-    it "should tweet a message" do
-       pending("get the mock for twitter")
-    end
+    it "should tweet a message"
 
-    it "should retweet about word" do
+    it "should retweet about word"
 
-    end
+    it "should follow users tweets about"
 
-    it "should follow users tweets about" do
-
-    end
-
-    it "should unfollow users who did not following me" do
-
-    end
+    it "should unfollow users who did not following me"
   end
-
 
 end
