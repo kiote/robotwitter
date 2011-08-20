@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{robotwitter}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Krivich Ekaterina"]
-  s.date = %q{2011-07-28}
+  s.authors = [%q{Krivich Ekaterina}]
+  s.date = %q{2011-08-20}
   s.description = %q{automate twitter tasks, such as retweetting, following, unfollowing}
   s.email = %q{krivich.ekaterina@gmail.com}
   s.extra_rdoc_files = [
@@ -34,9 +34,9 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/kiote/robotwitter}
-  s.licenses = ["MIT"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.licenses = [%q{MIT}]
+  s.require_paths = [%q{lib}]
+  s.rubygems_version = %q{1.8.6}
   s.summary = %q{automate some twitter tasks}
   s.test_files = [
     "spec/robotwitter/robotwitter_spec.rb",
