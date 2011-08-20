@@ -21,8 +21,8 @@ describe "Robotwitter" do
   end
 
   before(:each) do
-    settings_path = File.expand_path('../../../example', __FILE__)
-    @client = Robotwitter::Robot.new settings_path, 'test_login', &POSTER
+    @settings_path = File.expand_path('../../../example', __FILE__)
+    @client = Robotwitter::Robot.new @settings_path, 'test_login', &POSTER
   end
 
   it "should create new object on right init params" do
@@ -47,5 +47,14 @@ describe "Robotwitter" do
 
   it "should unfollow users who did not following me" do
     @client.unfollow_users
+  end
+
+  it "should not tweet if phrase is empty" do
+    EMPTY = lambda do
+      ""
+    end
+
+    client = Robotwitter::Robot.new @settings_path, 'test_login', &EMPTY
+    client.send_message('_msg_ #hash')
   end
 end

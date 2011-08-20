@@ -61,6 +61,8 @@ module Robotwitter
     # string '_msg_ somth'
     def send_message(pattern)
       phrase = get_phrase
+      p phrase
+      return if phrase == ''
       send = pattern.gsub('_msg_', phrase)
       @client.update send
       @logger.info send
@@ -122,7 +124,9 @@ module Robotwitter
 
     # get phrase
     def get_phrase
-      @getter.call self
+      @getter.call(self)
+    rescue
+      ""
     end
 
     # ищем пользователей, которые пишут о
