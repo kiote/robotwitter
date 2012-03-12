@@ -1,7 +1,7 @@
-$:.unshift(File.dirname(__FILE__))
-$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
-
-require 'twitter'
-require 'rspec'
-require 'fakeweb'
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'robotwitter'
+
+require 'minitest/autorun'
+require 'minitest/mock'
+require 'pry'
+

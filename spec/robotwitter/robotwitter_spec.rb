@@ -1,60 +1,75 @@
-require "spec_helper"
+$LOAD_PATH << File.expand_path('../../', __FILE__)
+require 'spec_helper'
 
-describe "Robotwitter" do
-
+describe Robotwitter do
+  def mock_client(object)
+    @mock = MiniTest::Mock.new
+    object.instance_variable_set(:@client, @mock)
+  end
   before do
-    FakeWeb.register_uri(:get, %r|https://api\.twitter\.com/1/followers/ids\.json|,
-                         :body => %|{"ids": [1,2,3]}|)
-    # GET https://api.twitter.com/1/friends/ids.json
-    FakeWeb.register_uri(:get, %r|https://api\.twitter\.com/1/friends/ids\.json|,
-                         :body => %|{"ids": [1,2,3]}|)
-    # POST https://api.twitter.com/1/statuses/update.json
-    FakeWeb.register_uri(:post, %r|https://api\.twitter\.com/1/statuses/update\.json|,
-                         :body => '')
-    # POST https://api.twitter.com/1/statuses/retweet/
-    FakeWeb.register_uri(:post, %r|https://api\.twitter\.com/1/statuses/retweet|,
-                         :body => '')
+    @robotwitter = Robotwitter::Robot.new('', 'test_login') do
+      'hello'
+    end
+    mock_client(@robotwitter)
   end
 
-  POSTER = lambda do |l|
-    'some tweet'
-  end
-
-  before(:each) do
-    @settings_path = File.expand_path('../../../example', __FILE__)
-    @client = Robotwitter::Robot.new @settings_path, 'test_login', &POSTER
-  end
-
-  it "should create new object on right init params" do
-    @client.class.to_s.should eq("Robotwitter::Robot")
-  end
-
-  it "should follows those who follows me" do
-    @client.follow_all_back
-  end
-
-  it "should tweet a message" do
-    @client.send_message('_msg_ #hash')
-  end
-
-  it "should retweet about word" do
-    @client.retweet_about('something')
-  end
-
-  it "should follow users tweets about" do
-    @client.follow_users_tweets_about('something')
-  end
-
-  it "should unfollow users who did not following me" do
-    @client.unfollow_users
-  end
-
-  it "should not tweet if phrase is empty" do
-    EMPTY = lambda do
-      ""
+  # мы фалловим 5 пользователей: [4,5,6,7,8]
+  # нас фалловят 4: [1,2,3,4]
+  # follow_all_back должна зафалловить 3х пользователей: [1,2,3]
+  describe 'follow_all_back' do
+    before do
+      ids = [1,2,3,4]
+      @mock.expect(:follower_ids, 'ids' => ids)
+      @mock.expect(:friend_ids,   'ids' => [4,5,6,7,8])
+      ids.pop
+      ids.each { |id| @mock.expect(:follow, [], [id]) }
     end
 
-    client = Robotwitter::Robot.new @settings_path, 'test_login', &EMPTY
-    client.send_message('_msg_ #hash')
+    it 'should follow those, who follows me' do
+      @robotwitter.follow_all_back
+      @mock.verify
+    end
+  end
+
+  # тестируем отправку сообщений
+  # перед отправкой сообщение получается из внешнего источника
+  describe 'send_message' do
+    before do
+      @mock.expect(:update, nil, ['hello there'])
+    end
+
+    it 'should successfully sends message' do
+      @robotwitter.send_message('_msg_ there')
+      @mock.verify
+    end
+  end
+
+  # тестируем ретвит о каком-то слове
+  # сначала мокаем search_client
+  # он вызывает кучу методов через method chaining и возвращает id твитта,который нужно ретвитнуть
+  # потом мокаем сохраниение в базе
+  describe 'retweet_about' do
+    before do
+      sk = MiniTest::Mock.new
+      sk.expect(:containing,  sk, %w/hell/)
+      sk.expect(:locale,      sk, %w/ru/)
+      sk.expect(:no_retweets, sk)
+      sk.expect(:per_page,    sk, [2])
+      sk.expect(:fetch,       ['id' => 'kolyan'])
+
+      db = MiniTest::Mock.new
+      db.expect(:nil?, false)
+      db.expect(:retweeted?, false, ['id' => 'kolyan'])
+      db.expect(:save_retweet, false, ['id' => 'kolyan'])
+
+      @robotwitter.instance_variable_set(:@search_client, sk)
+      @robotwitter.instance_variable_set(:@db, db)
+      @mock.expect(:retweet, nil, %w/kolyan/)
+    end
+
+    it 'should retweet' do
+      @robotwitter.retweet_about('hell')
+      @mock.verify
+    end
   end
 end

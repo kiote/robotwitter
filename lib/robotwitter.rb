@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'twitter'
+require 'twitter/error/unauthorized'
 require 'open-uri'
 require 'yaml'
 require 'sqlite3'
@@ -21,10 +22,7 @@ module Robotwitter
     #    db.get_first_row( "select * from table" )
     #  end
     def initialize(path, section, &getter)
-      @getter        = getter
-      @followers_ids = nil
-      @following_ids = nil
-      @path          = path
+      @getter, @path, @followers_ids, @following_ids = getter, path, nil, nil
 
       @logger = Logger.new('tweelog.txt', 'weekly')
 
@@ -37,6 +35,7 @@ module Robotwitter
           config.oauth_token_secret = yml[section]['oauth_token_secret']
         end
         @client = Twitter::Client.new
+        @search_client = Twitter::Search.new
       rescue Exception => exception
         @logger.error %/error occurred:  #{exception.inspect}\n#{exception.backtrace.join("\n")}/
       end
@@ -44,28 +43,25 @@ module Robotwitter
 
     # follow who follows me
     def follow_all_back
-      get_followers_ids
-      get_following_ids
-
-      follow_them = @followers_ids - @following_ids
-      @logger.info 'follows:'
+      follow_them = get_followers_ids - get_following_ids
       follow_them.each do |id|
         begin
-          @client.follow id
-        rescue
+          @client.follow(id)
+        rescue Exception => exception
+          p exception
+          @logger.info 'can\'t follow' + id.to_s + 'cause of' + exception.inspect
         end
-        @logger.info id
+        @logger.info 'following' + id.to_s
       end
     end
 
     # string '_msg_ somth'
     def send_message(pattern)
       phrase = get_phrase
-      p phrase
       return if phrase == ''
       send = pattern.gsub('_msg_', phrase)
-      @client.update send
-      @logger.info send
+      @client.update(send)
+      @logger.info(send)
     end
 
     def retweet_about(word)
@@ -73,70 +69,62 @@ module Robotwitter
       init_db
       search.each do |result|
         next if @db.retweeted?(result)
-        retweet result
-        @db.save_retweet result
-        @logger.info result['id']
+        retweet(result)
+        @db.save_retweet(result)
+        @logger.info(result['id'])
       end
     end
 
     # follow who tweet about word
     def follow_users_tweets_about(word)
-      users = search_users_tweets_about word
+      users = search_users_tweets_about(word)
 
       get_followers_ids
       get_following_ids
-      @logger.info users
+      @logger.info(users)
       users.each do |user|
         id = user['from_user_id']
         name = user['from_user']
         begin
           if (not @followers_ids.include?(id)) and (not @following_ids.include?(id))
-            @client.follow name
-            @logger.info name
+            @client.follow(name)
+            @logger.info(name)
           end
         rescue  Exception => msg
-          @logger.error "Error #{msg}"
+          @logger.error("Error #{msg}")
         end
       end
     end
 
     #unfollow who not following me
     def unfollow_users
-      get_followers_ids
-      get_following_ids
-
-      unfollow_them = @following_ids - @followers_ids
+      unfollow_them = get_followers_ids - get_following_ids
       unfollow_them.each do |id|
         begin
-          @client.unfollow id
+          @client.unfollow(id)
         rescue
+          @logger.error("cant unfollow #{id}")
         end
-        @logger.info id
+        @logger.info(id)
       end
     end
 
     protected
 
     def init_db
-      @db = Robotwitter::Db.new('tweets', @path) if @db.nil?
-      @db
+      @db ||= Robotwitter::Db.new('tweets', @path)
     end
 
-    # get phrase
+    # get phrase from internal resource
     def get_phrase
       @getter.call(self)
     rescue
       ""
     end
 
-    # ищем пользователей, которые пишут о
+    # search for users tweets about
     def search_users_tweets_about(word, count = 5)
-      resp = Twitter::Search.new.containing(word).locale("ru").no_retweets.per_page(count).fetch
-      if resp.is_a?(Twitter::Unauthorized)
-        @logger.error 'unauthorized'
-        return []
-      end
-      resp
+      @search_client.containing(word).locale("ru").no_retweets.per_page(count).fetch
     end
 
     # get follower ids
@@ -154,18 +142,14 @@ module Robotwitter
       end
     end
 
-    # ретвитим
+    # retweet
     # result - hash от поиска
     def retweet(result)
-      begin
-        @client.retweet(result['id'])
-      rescue => desc
-        @logger.error 'error: ' + desc.inspect
-      end
+      @client.retweet(result['id'])
     end
 
     def rate_limit
-      @logger.error @client.rate_limit_status.remaining_hits.to_s + " Twitter API request(s) remaining this hour"
+      @logger.error(@client.rate_limit_status.remaining_hits.to_s + ' Twitter API request(s) remaining this hour')
     end
   end
 end

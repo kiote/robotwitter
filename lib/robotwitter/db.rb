@@ -11,12 +11,12 @@ module Robotwitter
     def create_db(name)
       db = SQLite3::Database.new("#{name}.db")
 
-      sql = <<SQL
-          create table #{TABLENAME} (
-            id  integer PRIMARY KEY AUTOINCREMENT,
-            tweet_id string
-          );
-SQL
+      sql = <<-SQL
+            create table #{TABLENAME} (
+              id  integer PRIMARY KEY AUTOINCREMENT,
+              tweet_id string
+            );
+            SQL
 
       db.execute_batch(sql)
     end
