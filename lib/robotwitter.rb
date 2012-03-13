@@ -17,7 +17,7 @@ module Robotwitter
     # which returns string
     # example of getter
     #
-    #  SQLITE_GETTER = lambda do |s|
+    #  SQLITE_GETTER = lambda do
     #    db = SQLite3::Database.new("database.db")
     #    db.get_first_row( "select * from table" )
     #  end
@@ -26,7 +26,11 @@ module Robotwitter
 
       @logger = Logger.new('tweelog.txt', 'weekly')
 
-      yml = YAML.load_file(path + '/' + "settings.yml")
+
+      path ||= ''
+      path += '/' if path != ''
+
+      yml = YAML.load_file(path + "settings.yml")
       Twitter.configure do |config|
         config.consumer_key       = yml[section]['consumer_key']
         config.consumer_secret    = yml[section]['consumer_secret']
@@ -34,7 +38,7 @@ module Robotwitter
         config.oauth_token_secret = yml[section]['oauth_token_secret']
       end
       @client = Twitter::Client.new
-      @search_client = Twitter::Search.new
+      @search_client = Twitter
     end
 
     # follow who follows me
@@ -85,7 +89,7 @@ module Robotwitter
 
     #unfollow who not following me
     def unfollow_users
-      unfollow_them = get_followers_ids - get_following_ids
+      unfollow_them = get_following_ids - get_followers_ids
       unfollow_them.each do |id|
         @client.unfollow(id)
         @logger.info(id)
@@ -107,7 +111,7 @@ module Robotwitter
 
     # search for users tweets about
     def search_users_tweets_about(word, count = 5)
-      @search_client.containing(word).locale("ru").no_retweets.per_page(count).fetch
+      @search_client.search(word, :locale => 'ru', :result_type => 'resent', :rpp => count)
     end
 
     # get follower ids
@@ -123,12 +127,15 @@ module Robotwitter
       if @following_ids.nil?
         @following_ids = @client.friend_ids['ids']
       end
+      @following_ids
     end
 
     # retweet
     # result - hash от поиска
     def retweet(result)
       @client.retweet(result['id'])
+    rescue => detail
+      @logger.error(detail)
     end
 
     def rate_limit

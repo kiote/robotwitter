@@ -57,12 +57,7 @@ describe Robotwitter do
     # он вызывает кучу методов через method chaining и возвращает id твитта
     before do
       sk = MiniTest::Mock.new
-      sk.expect(:containing,  sk, %w/hell/)
-      sk.expect(:locale,      sk, %w/ru/)
-      sk.expect(:no_retweets, sk)
-      sk.expect(:per_page,    sk, [2])
-      sk.expect(:per_page,    sk, [5])
-      sk.expect(:fetch,       tweet_params)
+      sk.expect(:search, tweet_params, %w/hell/)
       @robotwitter.instance_variable_set(:@search_client, sk)
     end
 

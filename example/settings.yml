@@ -1,5 +1,5 @@
-test_login:
-  consumer_key: key
-  consumer_secret: secret
-  oauth_token: oauth_token
-  oauth_token_secret: oauth_token
+serialmaniak_ru:
+  consumer_key: qhQYAKHy5mVWhdqPD0DX1g
+  consumer_secret: bFgbeWrr6y10qtFrC089WswSgbhWdmQPYZxbvB30uwk
+  oauth_token: 27295510-cZOZYtSnRHYEdnLyIcEbWPFaDQz0Ev7RdZanUbZY
+  oauth_token_secret: 6bIrZX6burEjHS5BMrYcQDBFKvtK2lsr4E2sOcnOQYg

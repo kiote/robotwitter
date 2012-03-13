@@ -36,7 +36,7 @@ module Robotwitter
     # сохраняем ретвитт, чтобы не ретвиттить снова
     # result - результат twitter.search
     def save_retweet result
-      id = result['id_str']
+      id = result.attrs['id_str']
       sql = "insert into #{TABLENAME} (tweet_id) values (#{id})"
       @db.query(sql)
     end
