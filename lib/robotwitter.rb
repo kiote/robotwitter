@@ -26,31 +26,22 @@ module Robotwitter
 
       @logger = Logger.new('tweelog.txt', 'weekly')
 
-      begin
-        yml = YAML.load_file(path + '/' + "settings.yml")
-        Twitter.configure do |config|
-          config.consumer_key       = yml[section]['consumer_key']
-          config.consumer_secret    = yml[section]['consumer_secret']
-          config.oauth_token        = yml[section]['oauth_token']
-          config.oauth_token_secret = yml[section]['oauth_token_secret']
-        end
-        @client = Twitter::Client.new
-        @search_client = Twitter::Search.new
-      rescue Exception => exception
-        @logger.error %/error occurred:  #{exception.inspect}\n#{exception.backtrace.join("\n")}/
+      yml = YAML.load_file(path + '/' + "settings.yml")
+      Twitter.configure do |config|
+        config.consumer_key       = yml[section]['consumer_key']
+        config.consumer_secret    = yml[section]['consumer_secret']
+        config.oauth_token        = yml[section]['oauth_token']
+        config.oauth_token_secret = yml[section]['oauth_token_secret']
       end
+      @client = Twitter::Client.new
+      @search_client = Twitter::Search.new
     end
 
     # follow who follows me
     def follow_all_back
       follow_them = get_followers_ids - get_following_ids
       follow_them.each do |id|
-        begin
-          @client.follow(id)
-        rescue Exception => exception
-          p exception
-          @logger.info 'can\'t follow' + id.to_s + 'cause of' + exception.inspect
-        end
+        @client.follow(id)
         @logger.info 'following' + id.to_s
       end
     end
@@ -85,13 +76,9 @@ module Robotwitter
       users.each do |user|
         id = user['from_user_id']
         name = user['from_user']
-        begin
-          if (not @followers_ids.include?(id)) and (not @following_ids.include?(id))
-            @client.follow(name)
-            @logger.info(name)
-          end
-        rescue  Exception => msg
-          @logger.error("Error #{msg}")
+        if (not @followers_ids.include?(id)) and (not @following_ids.include?(id))
+          @client.follow(name)
+          @logger.info(name)
         end
       end
     end
@@ -100,11 +87,7 @@ module Robotwitter
     def unfollow_users
       unfollow_them = get_followers_ids - get_following_ids
       unfollow_them.each do |id|
-        begin
-          @client.unfollow(id)
-        rescue
-          @logger.error("cant unfollow #{id}")
-        end
+        @client.unfollow(id)
         @logger.info(id)
       end
     end
