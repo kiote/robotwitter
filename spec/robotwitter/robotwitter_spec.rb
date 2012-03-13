@@ -19,7 +19,7 @@ describe Robotwitter do
   end
 
   before do
-    @robotwitter = Robotwitter::Robot.new('', 'test_login') do
+    @robotwitter = Robotwitter::Robot.new(File.expand_path('../../../example', __FILE__), 'serialmaniak_ru') do
       'hello'
     end
     mock_client(@robotwitter)
@@ -52,12 +52,13 @@ describe Robotwitter do
     end
   end
 
-  describe 'containing' do
+  describe 'search' do
     # сначала мокаем search_client
     # он вызывает кучу методов через method chaining и возвращает id твитта
     before do
       sk = MiniTest::Mock.new
-      sk.expect(:search, tweet_params, %w/hell/)
+      sk.expect(:search, tweet_params, ['hell', {:locale=>"ru", :result_type=>"resent", :rpp=>5}])
+      sk.expect(:search, tweet_params, ['hell', {:locale=>"ru", :result_type=>"resent", :rpp=>2}])
       @robotwitter.instance_variable_set(:@search_client, sk)
     end
 
@@ -94,11 +95,11 @@ describe Robotwitter do
 
   # мы фалловим 5 пользователей: [4,5,6,7,8]
   # нас фалловят 4: [1,2,3,4]
-  # follow_all_back должна отфалловить 3х пользователей: [1,2,3]
+  # follow_all_back должна отфалловить 3х пользователей: [5,6,7,8]
   describe 'unfollow_users' do
     before do
       follower_and_friends
-      (1..3).to_a.map {|i| @mock.expect(:unfollow, [], [i])}
+      (5..8).to_a.map {|i| @mock.expect(:unfollow, [], [i])}
     end
 
     it 'should unfollow' do

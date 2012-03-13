@@ -41,4 +41,3 @@ end
 
 Copyright (c) 2011 Krivich Ekaterina. See LICENSE.txt for
 further details.
-
