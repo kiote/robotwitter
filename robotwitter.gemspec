@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{robotwitter}
-  s.version = "0.1.3"
+  s.name = "robotwitter"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Krivich Ekaterina}]
-  s.date = %q{2011-08-20}
-  s.description = %q{automate twitter tasks, such as retweetting, following, unfollowing}
-  s.email = %q{krivich.ekaterina@gmail.com}
+  s.authors = ["Krivich Ekaterina"]
+  s.date = "2012-03-13"
+  s.description = "automate twitter tasks, such as retweetting, following, unfollowing"
+  s.email = "krivich.ekaterina@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -33,15 +33,11 @@ Gem::Specification.new do |s|
     "spec/robotwitter/robotwitter_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/kiote/robotwitter}
-  s.licenses = [%q{MIT}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.6}
-  s.summary = %q{automate some twitter tasks}
-  s.test_files = [
-    "spec/robotwitter/robotwitter_spec.rb",
-    "spec/spec_helper.rb"
-  ]
+  s.homepage = "http://github.com/kiote/robotwitter"
+  s.licenses = ["MIT"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = "1.8.17"
+  s.summary = "automate some twitter tasks"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
@@ -50,27 +46,27 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<twitter>, [">= 0"])
       s.add_runtime_dependency(%q<sqlite3>, [">= 0"])
       s.add_runtime_dependency(%q<fakeweb>, [">= 0"])
+      s.add_runtime_dependency(%q<minitest>, [">= 0"])
+      s.add_runtime_dependency(%q<pry>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
       s.add_dependency(%q<twitter>, [">= 0"])
       s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<fakeweb>, [">= 0"])
+      s.add_dependency(%q<minitest>, [">= 0"])
+      s.add_dependency(%q<pry>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
     s.add_dependency(%q<twitter>, [">= 0"])
     s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<fakeweb>, [">= 0"])
+    s.add_dependency(%q<minitest>, [">= 0"])
+    s.add_dependency(%q<pry>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
   end
 end
 
