@@ -1,4 +1,4 @@
-= Robotwitter
+= Robotwitter {<img src="https://secure.travis-ci.org/kiote/robotwitter.png" />}[http://travis-ci.org/kiote/robotwitter]
 
 Robotwitter makes it easer to automate some twitter functions, such as:
  * creating tweets
